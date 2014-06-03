@@ -47,7 +47,7 @@ public class PensionsDelayCalculatorPage {
         SetJSTextBoxValue(retirementAgeTB, retAge);
         SetJSTextBoxValue(annualSalaryTB, annualSal);
         SetJSTextBoxValue(pensionContributionTB, penContr);
-        SetJSTextBoxValue(delayStartTB,delayPen);
+        SetJSTextBoxValue(delayStartTB, delayPen);
 
         contrDD = new Select(pensionContributionDD);
         contrDD.selectByValue(String.valueOf(yearlyOrMonthly));
@@ -60,6 +60,13 @@ public class PensionsDelayCalculatorPage {
     public void ButtonClick(String buttonName) {
 
         driver.findElement(By.xpath("//button[contains(text(),'" + buttonName + "')]")).click();
+    }
+
+    public void ClickElement(String elementToClick){
+        if(elementToClick.contains("tax"))
+            taxReliefLB.click();
+        else if(elementToClick.contains("contri"))
+            yourContriLB.click();
     }
 
     public Boolean CheckAllFieldsAreReset(String yearOfBirth, String retAge, String annualSal, String penContr,
@@ -97,28 +104,23 @@ public class PensionsDelayCalculatorPage {
     }
 
     public void ChangeYearOfBirth(String yearOfBirth) {
-        yearBornTB.clear();
-        yearBornTB.sendKeys(yearOfBirth);
+        SetJSTextBoxValue(yearBornTB,yearOfBirth);
     }
 
     public void ChangeRetAge(String retAge) {
-        retirementAgeTB.clear();
-        retirementAgeTB.sendKeys(retAge);
+       SetJSTextBoxValue(retirementAgeTB,retAge);
     }
 
     public void ChangeAnnualSal(String annualSal) {
-        annualSalaryTB.clear();
-        annualSalaryTB.sendKeys(annualSal);
+       SetJSTextBoxValue(annualSalaryTB,annualSal);
     }
 
     public void ChangePensContri(String pensContri) {
-        pensionContributionTB.clear();
-        pensionContributionTB.sendKeys(pensContri);
+        SetJSTextBoxValue(pensionContributionTB,pensContri);
     }
 
     public void ChangeDelayPensionStart(String delayPensStart) {
-        delayStartTB.clear();
-        delayStartTB.sendKeys(delayPensStart);
+        SetJSTextBoxValue(delayStartTB,delayPensStart);
     }
 
     public void StoreLastDisplayedValue() {
@@ -147,8 +149,20 @@ public class PensionsDelayCalculatorPage {
 
     }
 
-    public void CheckCalculation(){
-        totalPensPotLB.getAttribute("value")
+    public Boolean CheckCalculation() {
+
+        String totalPensionT = GetWebElementValue(totalPensPotLB,true),
+                annualSalT = GetWebElementValue(annualSalaryTB,true);
+
+        if (totalPensionT.contains("NaN") || annualSalT.contains("NaN"))
+            return false;
+
+        int totalPension = Integer.parseInt(totalPensionT),
+                annualSal = Integer.parseInt(annualSalT);
+
+        if (totalPension < annualSal)
+            return false;
+        return true;
     }
 
     private void ChangeFrame() {
@@ -183,10 +197,16 @@ public class PensionsDelayCalculatorPage {
 
     }
 
-    private void SetJSTextBoxValue(WebElement jSTextBox, String value){
+    private void SetJSTextBoxValue(WebElement jSTextBox, String value) {
         ClearTextBoxValue(jSTextBox);
         jSTextBox.sendKeys(value);
         CallOnChangeFunction(jSTextBox);
+    }
+
+    private String GetWebElementValue(WebElement webElement, Boolean removeSpecialChars) {
+        if (removeSpecialChars)
+            return webElement.getAttribute("value").replaceAll("[£,]","");
+        return webElement.getAttribute("value");
     }
 
 

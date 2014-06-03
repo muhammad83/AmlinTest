@@ -65,7 +65,7 @@ Feature: Exploratory Tests for Amlin Pensions Delay Calculator Page
     When I click on "Update" button
     Then I should get “NaN” in the Results sections of the page.
 
-  @TestCase11, @run
+  @TestCase11
   Scenario: Check Yearly dropdown option
     Given I have provided all the details and selected “Gross pension contribution” drop down option as “Yearly”
     When I click on "Update" button
@@ -75,14 +75,14 @@ Feature: Exploratory Tests for Amlin Pensions Delay Calculator Page
   Scenario: Negative values behaviour
     Given I have provided correct values for “Year you were born”,“Retirement age” fields
     And negative values for “Annual salary before tax (£)”,“Gross pension contribution (£)”
-    When I click on “Update” button
+    When I click on "Update" button
     Then I should get “NaN” in the Results sections of the page.
 
   @TestCase13
   Scenario: Negative value in delay pensions field
     Given I have provided correct values for “Year you were born”,“Retirement age”. “Annual salary before tax (£)”,“Gross pension contribution (£)” fields
     And negative value for “If you delay starting your pension by”
-    When I click on “Update” button
+    When I click on "Update" button
     Then I should get “NaN” in the Results fields “Your total delayed pension pot could be” and “Delayed annual pension in real terms”
 
   @TestCase14
@@ -94,12 +94,12 @@ Feature: Exploratory Tests for Amlin Pensions Delay Calculator Page
   @TestCase15
   Scenario: Year of birth and retirement age relation
     Given I provide “Year you were born” field with values which calculate the “Retirement age” field greater than my current age.
-    When I click on “Update” button
-    Then I should get “NaN” in the Results sections of the page.
+    When I click on "Update" button
+    Then I should get “NaN” in the Results sections for total pension, annual pension, total delay and delayed annual pension  of the page.
 
-  @TestCase16
+  @TestCase16, @run
   Scenario: Delay pension and retirement age relation
     Given I have provided all the details on the Pensions Delay Calculator form
     And I have provided “If you delay starting your pension by” field with a value greater than the value I provided in the “retirement age”.
-    When I click on “Update” button
-    Then I should get “NaN” in the Results sections of the page.
+    When I click on "Update" button
+    Then I should get “NaN” in the total delay and delayed annual pension  of the page.
